@@ -1,0 +1,169 @@
+
+
+NOTAS: ya se que lo pidieron con dos botones; lo hice asi porque me parecio kul, este es el codigo de los dos archivos que ocupe (tiene titulo)
+	para preservar los datos se hace mediante la parte de preferences, chequen los metodos save, update y load, que es donde se hace la magia
+
+	ojala le sirva a alguien, los quiero un chingo
+
+														
+														ivy
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+MAIN_ACTIVITY.JAVA
+
+
+------------------
+
+
+
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import java.util.Random;
+
+public class MainActivity extends AppCompatActivity {
+
+    LinearLayout lay;
+    Button boton;
+    Button botonguardar;
+    int num_color;
+
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String COLOR = "0";
+
+    private int color_nuevo;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate ( savedInstanceState );
+        setContentView ( R.layout.activity_main );
+        lay = findViewById ( R.id.fondo );
+        boton = findViewById ( R.id.button );
+        botonguardar = findViewById ( R.id.savebutton );
+
+        boton.setOnClickListener ( new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                Random random = new Random();
+                int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt (256));
+                num_color=color;
+                lay.setBackgroundColor ( color );
+            }
+        } );
+
+        botonguardar.setOnClickListener ( new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                    saveData();
+            }
+        } );
+
+        loadData ();
+        updateViews ();
+    }
+
+    public void saveData(){
+
+        SharedPreferences sh = getSharedPreferences ( SHARED_PREFS, MODE_PRIVATE );
+        SharedPreferences.Editor editor = sh.edit ();
+
+        editor.putInt (COLOR, num_color);
+        editor.apply ();
+        Toast.makeText (this, "cambios guardados", Toast.LENGTH_SHORT).show();
+    }
+
+    publ	ic void loadData(){
+        SharedPreferences sh = getSharedPreferences ( SHARED_PREFS, MODE_PRIVATE );
+        color_nuevo = sh.getInt (COLOR,5);
+    }
+
+    public void updateViews(){
+        lay.setBackgroundColor (color_nuevo);
+    }
+}
+
+#090505
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+MAIN LAYOUT (ACTIVITY_MAIN.XML)
+
+--------------------
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fondo"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="El color se guardara cuando cierre la aplicacion; Crei que seria mas creativo que hacerlo solo con dos colores"
+        android:gravity="center_horizontal"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteX="60dp"
+        tools:layout_editor_absoluteY="116dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cambiar color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintVertical_bias="0.377" />
+
+    <Button
+        android:id="@+id/savebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Guardar cambios"
+        />
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
